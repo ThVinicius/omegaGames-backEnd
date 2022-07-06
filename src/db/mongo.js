@@ -6,7 +6,7 @@ dotenv.config()
 const mongoClient = new MongoClient(process.env.MONGO_URI)
 let db
 mongoClient.connect(() => {
-  db = mongoClient.db('myWallet')
+  db = mongoClient.db('omegaGames')
 })
 
 const objectId = ObjectId
