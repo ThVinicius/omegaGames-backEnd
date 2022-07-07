@@ -1,35 +1,30 @@
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { db,objectId } from "../db/mongo.js";
-import loginSchema from "../schemas/authShemas/loginSchema.js";
-
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import { db, objectId } from '../db/mongo.js'
+import loginSchema from '../schemas/authShemas/loginSchema.js'
 
 export async function signIn(req, res) {
-  const { email, password } = req.body;
+  const { email, password } = req.body
 
-  const { error } = loginSchema.validate({email,password});
+  const { error } = loginSchema.validate({ email, password })
 
   if (error) {
-    return res.sendStatus(422);
+    return res.sendStatus(422)
   }
 
   try {
-    const user = await db.collection("users").findOne({ email: email });
+    const user = await db.collection('users').findOne({ email: email })
 
     if (!user) {
-      return res.sendStatus(404);
+      return res.sendStatus(404)
     }
 
-    const comparePassword = bcrypt.compareSync(password, user.password);
+    const comparePassword = bcrypt.compareSync(password, user.password)
 
     if (user && comparePassword) {
-      const token = jwt.sign(
-        { id: user._id },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "1d",
-        }
-      );
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: '1d'
+      })
 
       /* const sessionUser = await db.collection("sessions").findOne({ id: objectId(user._id)});
 
@@ -38,21 +33,20 @@ export async function signIn(req, res) {
           res.status(400).send("usuario já existe");
       } */
 
-      await db.collection("sessions").insertOne({
+      await db.collection('sessions').insertOne({
         userId: objectId(user._id),
         token
-      });
+      })
 
-      return res.status(201).send({ token });
+      return res.status(201).send({ token })
     } else {
-      return res.sendStatus(401);
+      return res.sendStatus(401)
     }
   } catch (error) {
-    console.log(error);
-    res.sendStatus(500);
+    res.sendStatus(500)
   }
 }
-export async function register (req, res) {
+export async function register(req, res) {
   try {
     const { name, email, picture, password } = req.body
 
@@ -71,7 +65,6 @@ export async function register (req, res) {
 
     return res.sendStatus(201)
   } catch (error) {
-    console.log(error)
     return res.status(500).send(error)
   }
 }

@@ -13,7 +13,6 @@ export default async function registerValidate(req, res, next) {
 
     if (search !== null) return res.sendStatus(409)
   } catch (error) {
-    console.log(error)
     return res.status(500).send(error)
   }
 
