@@ -1,13 +1,13 @@
-
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { db,objectId } from "../db/mongo";
-import loginSchema from "../schemas/authSchemas/loginSchema";
+import { db,objectId } from "../db/mongo.js";
+import loginSchema from "../schemas/authShemas/loginSchema.js";
+
 
 export async function signIn(req, res) {
   const { email, password } = req.body;
 
-  const { error } = loginSchema.validate(user);
+  const { error } = loginSchema.validate({email,password});
 
   if (error) {
     return res.sendStatus(422);
@@ -24,18 +24,19 @@ export async function signIn(req, res) {
 
     if (user && comparePassword) {
       const token = jwt.sign(
-        { id: objectId(user._id) },
+        { id: user._id },
         process.env.JWT_SECRET,
         {
           expiresIn: "1d",
         }
       );
 
-      const sessionUser = await db.collection("sessions").findOne({ id: objectId(_id)});
+      /* const sessionUser = await db.collection("sessions").findOne({ id: objectId(user._id)});
 
       if(sessionUser.id){
           //atualiza user
-      }
+          res.status(400).send("usuario já existe");
+      } */
 
       await db.collection("sessions").insertOne({
         userId: objectId(user._id),
@@ -51,7 +52,7 @@ export async function signIn(req, res) {
     res.sendStatus(500);
   }
 }
-export function register (req, res) {
+export async function register (req, res) {
   try {
     const { name, email, picture, password } = req.body
 

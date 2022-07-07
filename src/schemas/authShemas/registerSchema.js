@@ -1,4 +1,4 @@
-import Joi from 'joi'
+import Joi from "joi";
 
 const registerSchema = Joi.object({
   name: Joi.string().trim().max(17).required(),
@@ -7,7 +7,7 @@ const registerSchema = Joi.object({
     .pattern(/(https?:\/\/.*\.(?:png|jpg))/)
     .required(),
   password: Joi.string().required(),
-  confirmPassword: Joi.ref('password')
-})
+  confirmPassword: Joi.ref("password"),
+});
 
-export default registerSchema
+export default registerSchema;

@@ -1,4 +1,4 @@
-import { db } from "../db/mongo";
+import { db } from "../../db/mongo.js";
 
 async function validateUser(req, res, next) {
   const { authorization } = req.headers;
