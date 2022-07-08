@@ -35,7 +35,7 @@ export async function signIn(req, res) {
           await db
             .collection("sessions")
             .updateOne({ userId: user._id }, { $set: { token: token } });
-          return res.status(400).send(`usuário já logado ${token}`);
+          return res.sendStatus(200);
         } catch (error) {
           console.log(error);
           res.sendStatus(404);
@@ -52,7 +52,6 @@ export async function signIn(req, res) {
       return res.sendStatus(401);
     }
   } catch (error) {
-    console.log(error);
     res.sendStatus(500);
   }
 }
