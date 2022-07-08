@@ -1,31 +1,43 @@
-import { db, objectId } from '../db/mongo.js'
+import { db, objectId } from '../db/mongo.js';
 
 export async function getHome(_, res) {
   try {
-    const games = await db.collection('games').find().toArray()
+    const games = await db.collection('games').find().toArray();
 
-    return res.status(200).send(games)
+    return res.status(200).send(games);
   } catch (error) {
-    return res.status(500).send(error)
+    return res.status(500).send(error);
   }
 }
 
 export async function postGame(req, res) {
-  const { userId } = res.locals.session
-  const { name, url, price, _id } = req.body
+  const { userId } = res.locals.session;
+  const { name, url, price, _id } = req.body;
 
   try {
-    const teste = await db
+    await db
       .collection('users')
       .updateOne(
         { _id: userId },
         { $push: { cart: { name, url, price, _id } } }
-      )
+      );
 
-    console.log(teste)
-
-    return res.sendStatus(200)
+    return res.sendStatus(200);
   } catch (error) {
-    return res.status(500).send(error)
+    return res.status(500).send(error);
+  }
+}
+
+export async function getUser(_, res) {
+  const { userId: _id } = res.locals.session;
+
+  try {
+    const user = await db.collection('users').findOne({ _id });
+
+    delete user.password;
+
+    return res.status(200).send(user);
+  } catch (error) {
+    return res.status(500).send(error);
   }
 }
