@@ -127,7 +127,7 @@ app.post('/add', async (req, res) => {
     toSend.push({ ...game, id })
   }
   console.log(toSend)
-  res.send('OK')
+  res.send('OKK');
 })
 
 app.use(authRoutes)

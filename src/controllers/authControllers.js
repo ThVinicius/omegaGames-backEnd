@@ -66,7 +66,7 @@ export async function register(req, res) {
       email,
       picture,
       password: cryptPassword,
-      cart: [{ id: objectId, name, url, price }],
+      cart: [],
       purchases: [],
     };
 
