@@ -5,9 +5,9 @@ async function validateToken(req, res, next) {
   const token = authorization?.replace("Bearer ", "");
 
   try {
-    const data = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(data);
-    res.locals.data = data;
+    const dados = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(dados);
+    res.locals.dados = dados;
   } catch {
       res.sendStatus(400);
   }

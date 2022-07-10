@@ -36,7 +36,7 @@ export async function signIn(req, res) {
           await db
             .collection("sessions")
             .updateOne({ userId: user._id }, { $set: { token: token } });
-          return res.sendStatus(200);
+          return res.status(200).send({token, data});
         } catch (error) {
           console.log(error);
           res.sendStatus(404);
@@ -67,7 +67,7 @@ export async function register(req, res) {
       email,
       picture,
       password: cryptPassword,
-      cart: [{ id: objectId, name, url, price }],
+      cart: [],
       purchases: [],
     };
 
