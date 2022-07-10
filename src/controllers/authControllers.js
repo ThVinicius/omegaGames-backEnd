@@ -23,7 +23,7 @@ export async function signIn(req, res) {
 
     if (user && comparePassword) {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "1d",
+        expiresIn: "1d"
       });
 
       const sessionUser = await db
@@ -44,7 +44,7 @@ export async function signIn(req, res) {
 
       await db.collection("sessions").insertOne({
         userId: objectId(user._id),
-        token,
+        token
       });
 
       return res.status(201).send({ token });
@@ -67,7 +67,7 @@ export async function register(req, res) {
       picture,
       password: cryptPassword,
       cart: [{ id: objectId, name, url, price }],
-      purchases: [],
+      purchases: []
     };
 
     await db.collection("users").insertOne(toSend);
