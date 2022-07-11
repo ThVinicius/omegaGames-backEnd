@@ -1,4 +1,5 @@
 import { db, objectId } from "../db/mongo.js";
+import dayjs from "dayjs";
 
 export async function getHome(_, res) {
   try {
@@ -102,10 +103,11 @@ export async function changeRating(req, res) {
 export async function purchase(req, res) {
   const { userId } = res.locals.session;
   const toAdd = [];
+  const now = dayjs().format("DD/MM/YYYY");
 
   for (const game of req.body) {
     const { _id } = game;
-    toAdd.push({ ...game, _id: objectId(_id) });
+    toAdd.push({ ...game, _id: objectId(_id), date: now });
   }
 
   try {

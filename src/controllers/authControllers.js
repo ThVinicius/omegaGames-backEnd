@@ -22,8 +22,16 @@ export async function signIn(req, res) {
     const comparePassword = bcrypt.compareSync(password, user.password);
 
     if (user && comparePassword) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "1d"
+      const data = {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+        purchases: user.purchases,
+        cart: user.cart
+      };
+      const token = jwt.sign(data, process.env.JWT_SECRET, {
+        expiresIn: 60 * 60 * 24
       });
 
       const sessionUser = await db
