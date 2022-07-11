@@ -28,6 +28,21 @@ export async function postGame(req, res) {
   }
 }
 
+export async function removeGame(req, res) {
+  const { userId } = res.locals.session;
+  const { id: _id } = req.params;
+
+  try {
+    await db
+      .collection("users")
+      .updateOne({ _id: userId }, { $pull: { cart: { _id } } });
+
+    return res.sendStatus(200);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+}
+
 export async function getUser(_, res) {
   const { userId: _id } = res.locals.session;
 
@@ -46,18 +61,6 @@ export async function changeRating(req, res) {
   const { userId } = res.locals.session;
   const { initialValue, newValue } = req.body;
   const _id = objectId(req.params.id);
-
-  //userRating está em um array de objetos chamado purchases (verifica pelo id do jogo) (mudar a avaliação)
-
-  //rating (array) está em uma collection de objetos (dentro do array verifica pelo idUser, caso já tenha uma  nota lá, apenas atualize, caso contrario adiciona) (atualizar ou adicionar {idDoUser, avaliação})
-
-  // await db.collection('session').findOneAndUpdate(
-  //   { idUser: user._id },
-  //   { $set: { idUser: user._id, token } },
-  //   {
-  //     upsert: true
-  //   }
-  // )
 
   try {
     const changeValue = { "purchases.$.userRating": newValue };
@@ -92,6 +95,31 @@ export async function changeRating(req, res) {
 
     return res.status(200).send(newDocument.value);
   } catch (error) {
+    return res.status(500).send(error);
+  }
+}
+
+export async function purchase(req, res) {
+  const { userId } = res.locals.session;
+  const toAdd = [];
+
+  for (const game of req.body) {
+    const { _id } = game;
+    toAdd.push({ ...game, _id: objectId(_id) });
+  }
+
+  try {
+    await db
+      .collection("users")
+      .updateOne({ _id: userId }, { $push: { purchases: { $each: toAdd } } });
+
+    await db
+      .collection("users")
+      .updateOne({ _id: userId }, { $set: { cart: [] } });
+
+    return res.sendStatus(200);
+  } catch (error) {
+    console.log(error);
     return res.status(500).send(error);
   }
 }
