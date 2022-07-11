@@ -7,24 +7,10 @@ import userRoutes from "./routes/userRoutes.js";
 dotenv.config();
 const app = express();
 
-
 app.use(express.json());
 app.use(cors());
 
 app.use(authRoutes);
 app.use(userRoutes);
 
-<<<<<<< HEAD
-    toSend.push({ ...game, id })
-  }
-  console.log(toSend)
-  res.send('OKK');
-})
-
-app.use(authRoutes)
-app.use(userRoutes)
-
-app.listen(process.env.PORT)
-=======
 app.listen(process.env.PORT);
->>>>>>> db23ff8b6124d00962f8d8ce1d61489ff89d26d5
